@@ -2,7 +2,7 @@ module Test.NoPeeking.Solutions where
 
 import Prelude
 
-import Data.Array (length, nub, nubByEq, nubEq)
+import Data.Array (length, nub, nubByEq, nubEq, (:))
 import Data.Foldable (class Foldable, foldMap, foldl, foldr, maximum)
 import Data.Generic.Rep (class Generic)
 import Data.Show.Generic (genericShow)
@@ -120,7 +120,7 @@ derive instance eqNonEmpty :: Eq a => Eq (NonEmpty a)
 -}
 
 instance semigroupNonEmpty :: Semigroup (NonEmpty a) where
-  append (NonEmpty e1 a1) (NonEmpty e2 a2) = NonEmpty e1 (a1 <> [ e2 ] <> a2)
+  append (NonEmpty e1 a1) (NonEmpty e2 a2) = NonEmpty e1 (a1 <> e2 : a2)
 
 instance showNonEmpty :: Show a => Show (NonEmpty a) where
   show (NonEmpty e1 a1) = show e1 <> " " <> show a1
@@ -159,9 +159,9 @@ derive instance ordExtended :: Ord a => Ord (Extended a)
 -}
 
 instance foldableNonEmpty :: Foldable NonEmpty where
-  foldr func st (NonEmpty val arr) = foldr func st ([ val ] <> arr)
-  foldl func st (NonEmpty val arr) = foldl func st ([ val ] <> arr)
-  foldMap func (NonEmpty val arr) = foldMap func ([ val ] <> arr)
+  foldr func st (NonEmpty val arr) = foldr func st (val : arr)
+  foldl func st (NonEmpty val arr) = foldl func st (val : arr)
+  foldMap func (NonEmpty val arr) = foldMap func (val : arr)
 
 -- ANCHOR: OneMore
 data OneMore f a = OneMore a (f a)
